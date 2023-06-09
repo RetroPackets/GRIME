@@ -22,8 +22,13 @@ def onionHTML(url):
 		proxy = httplib2.ProxyInfo(proxy_type=socks.PROXY_TYPE_SOCKS5, proxy_host='localhost', proxy_port=9050)
 		http = httplib2.Http(proxy_info=proxy, timeout=30)
 		content = http.request(url, headers={'Connection': 'close', 'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'})[1]
-		html = str(content,'utf-8').replace('\t',' ').replace('\n',' ').replace('\r',' ').replace('\"','')
-		return html
+		return (
+			str(content, 'utf-8')
+			.replace('\t', ' ')
+			.replace('\n', ' ')
+			.replace('\r', ' ')
+			.replace('\"', '')
+		)
 	except:
 		return "None"
 
@@ -56,12 +61,9 @@ def ahmia():
 	for matchNum, match in enumerate(matches, start=1):
 		url = (match.group())
 		results.append(url)
-	ahmia = list(set(results))
-	return ahmia
+	return list(set(results))
 
 def redditOnions():
-	results = []
-	regex = r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.onion\/?[-a-zA-Z0-9@:%._\/+~#=]{1,256}"
 	url = "https://www.reddit.com/r/onions/new.json?limit=10000000000000000000000000000000"
 	req = request.Request(url, data=None, headers={'Connection': 'close', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'})
 
@@ -72,12 +74,13 @@ def redditOnions():
 	if "Traceback (most recent call last):" in dataString:
 		redditOnions()
 	else:
+		regex = r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.onion\/?[-a-zA-Z0-9@:%._\/+~#=]{1,256}"
 		matches = re.finditer(regex, dataString, re.MULTILINE)
+		results = []
 		for matchNum, match in enumerate(matches, start=1):
 			url = (match.group())
 			results.append(url)
-		reddit = list(set(results))
-		return reddit
+		return list(set(results))
 
 def torstatus():
 	torstatus = subprocess.getoutput("Service Tor Status | grep Active")
@@ -104,7 +107,7 @@ def urlSplitter(url):
 		directory = str(url.split(".org")[1])
 		url = str(url.split(".org")[0]) + ".org"
 	else:
-		print(Y +"Unknown URL " + str(url))
+		print(f"{Y}Unknown URL {str(url)}")
 		exit()
 	if directory == "":
 		directory = "/"
@@ -116,8 +119,7 @@ def urlSplitter(url):
 
 
 def removeDuplicates(listOne, listTwo):
-	results = listOne + list(set(listTwo) - set(listOne))
-	return results
+	return listOne + list(set(listTwo) - set(listOne))
 
 def aTag(inputURL,html):
 	if inputURL[-1] == "/":
@@ -129,25 +131,21 @@ def aTag(inputURL,html):
 		url = (match.group())
 		results.append(url)
 	onions = list(set(results))
-	for i in onions:
-		temp.append((i.replace("<a href=","").replace(">","")))
+	temp.extend(i.replace("<a href=","").replace(">","") for i in onions)
 	for i in temp:
 		if "http" in i:
-			if ".onion" not in i:
-				pass
-			else:
+			if ".onion" in i:
 				temp2.append(i)
 		elif "mailto:" in i:
 			pass
 		elif i.startswith("../"):
-			i = i.replace("../",inputURL+"/")
+			i = i.replace("../", f"{inputURL}/")
 			temp2.append(i)
 		elif i.startswith("/"):
 			temp2.append(inputURL+i)
 		else:
-			temp2.append(inputURL + "/" + i)
-	aTag = list(set(temp2))
-	return aTag
+			temp2.append(f"{inputURL}/{i}")
+	return list(set(temp2))
 
 def inputAdder(newInput, input):
         for i in input:

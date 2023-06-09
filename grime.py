@@ -12,6 +12,7 @@ inputList = inputList()
 titlePrinter()
 check = rootcheck()
 masterList = []
+blacklist = ('http://76qugh5bey5gum7l.onion')
 while len(inputList) > 0:
 	if not os.path.exists("../output/deepminer.db"):
 		deepminerDB = createDB()
@@ -21,7 +22,6 @@ while len(inputList) > 0:
 	url = random.choice(inputList)
 	torstatus()
 	extensions = ('.jpg', 'jpeg', '.mp4', '.png', '.gif')
-	blacklist = ('http://76qugh5bey5gum7l.onion') 
 	if url not in masterList and not url.endswith(extensions) and not url.startswith(blacklist):
 		print(Y +"""
 [GRIME] New Iteration:""")

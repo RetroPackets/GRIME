@@ -9,10 +9,8 @@ deepSearchTitle()
 term = input("Enter Search: ")
 
 results = searchFTS(term,con)
-print("Found " + str(len(results)) + " Results.")
+print(f"Found {len(results)} Results.")
 
 for i in results:
-	string = ""
-	for j in i:
-		string += j
+	string = "".join(i)
 	print(string)

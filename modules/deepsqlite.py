@@ -2,12 +2,10 @@ import os
 import sqlite3
 
 def createDB():
-	con = sqlite3.connect('output/deepminer.db')
-	return con
+	return sqlite3.connect('output/deepminer.db')
 
 def connectDB():
-	con = sqlite3.connect('output/deepminer.db', timeout=30)
-	return con
+	return sqlite3.connect('output/deepminer.db', timeout=30)
 
 def createTables(con):
 	cur = con.cursor()
@@ -66,8 +64,7 @@ def searchDB(term,con):
 	cur = con.cursor()
 	query = "SELECT URL,Directory FROM Deepdata WHERE HTML LIKE \'%" + term + "%\' ORDER BY URL;"
 	cur.execute(query)
-	results = cur.fetchall()
-	return results
+	return cur.fetchall()
 
 def createFTStable(con):
 	cur = con.cursor()
@@ -83,5 +80,4 @@ def searchFTS(term,con):
 	cur = con.cursor()
 	query = "SELECT URL,Directory FROM Deepsearch WHERE HTML MATCH \'" + term  + "\' ORDER BY rank;"
 	cur.execute(query)
-	results = cur.fetchall()
-	return results
+	return cur.fetchall()
